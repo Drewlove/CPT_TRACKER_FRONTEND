@@ -1,99 +1,65 @@
 import styled, { keyframes } from 'styled-components';
-// How to update each item? Work onChange handler
-
-// name for each input needs to be specific to that input,
-// ie you will get multiple inputs with name of 'mrn', 'visitType' etc.
-// since each daily schedule line will generate an mrn, visitType, etc.
 
 const VisitType = styled.div`
   display: flex;
 `;
 
-// how to pass onChange handler?
-
-// export default function visitType({ props }) {
 export default function visitType(props) {
   console.log(props);
-  const { visitData } = props;
+  const { mrn, data, visitType, cpt, rvu, visitId } = props.visitData;
 
-  const test = (e) => {
-    props.handleChangeTest(e);
+  const handleChange = (e, visitId) => {
+    console.log(`test`, visitId);
+    props.handleChange(e, visitId);
   };
 
-  // const { visitData } = props;
-  // console.log(visitData);
   return (
     <VisitType>
-      {/* <label htmlFor={1234}>
+      <label htmlFor={`mrn-${visitId}`}>
         MRN
         <input
           type="number"
-          id={thing.id}
+          id={`mrn-${visitId}`}
           name="mrn"
           placeholder="0"
-          value={thing.val}
-          onChange={test}
-        />
-      </label> */}
-
-      <label htmlFor={`mrn-${props.id}`}>
-        MRN
-        <input
-          type="number"
-          id={`mrn-${props.id}`}
-          name="mrn"
-          placeholder="0"
-          value={visitData.mrn}
-          onChange={test}
+          value={mrn}
+          onChange={(e) => handleChange(e, visitId)}
         />
       </label>
-
-      {/* <label htmlFor="123">
-        MRN
-        <input
-          type="number"
-          id={123}
-          name="mrn"
-          placeholder="0"
-          value={props.data}
-          onChange={props.handleChangeTest}
-        />
-      </label> */}
-
-      {/* <label htmlFor={`visitType-${props.id}`}>
+      <label htmlFor={`visitType-${visitId}`}>
         Visit Type
         <input
           type="text"
-          id={`visitType-${props.type}`}
+          id={`visitType-${visitId}`}
           name="visitType"
-          placeholder="0"
-          value={visitData.type}
-          // onChange={handleChange}
+          placeholder=""
+          value={visitType}
+          onChange={(e) => handleChange(e, visitId)}
         />
       </label>
 
-      <label htmlFor={`cpt-${props.id}`}>
+      <label htmlFor={`cpt-${visitId}`}>
         CPT
         <input
           type="number"
-          id={`cpt-${props.type}`}
+          id={`cpt-${visitId}`}
           name="cpt"
           placeholder="0"
-          value={visitData.cpt}
-          // onChange={handleChange}
+          value={cpt}
+          onChange={(e) => handleChange(e, visitId)}
         />
       </label>
-      <label htmlFor={`rvu-${props.id}`}>
+      <label htmlFor={`rvu-${visitId}`}>
         RVU
         <input
           type="number"
-          id={`rvu-${props.type}`}
+          id={`rvu-${visitId}`}
           name="rvu"
           placeholder="0"
-          value={visitData.rvu}
-          // onChange={handleChange}
+          value={rvu}
+          onChange={(e) => handleChange(e, visitId)}
         />
-      </label> */}
+      </label>
     </VisitType>
   );
 }

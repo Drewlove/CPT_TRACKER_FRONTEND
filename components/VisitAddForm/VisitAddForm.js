@@ -47,14 +47,14 @@ export default function visitAddForm() {
   // const [tesseractStatus, setTesseractStatus] = useState('');
   // const [isConvertingImgToText, setisConvertingImgToText] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
-  const [list, setList] = useState([]);
+  const [visitList, setVisitList] = useState([]);
   const [image, setImage] = useState('');
   const [test, setTest] = useState('test');
 
   const [createProduct, { loading, error, data }] = useMutation(
     CREATE_PRODUCT_MUTATION,
     {
-      variables: list,
+      variables: visitList,
       // refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
     }
   );
@@ -66,20 +66,44 @@ export default function visitAddForm() {
   };
 
   // HERE, NEXT
-  // list, array of objects, has id property, then a propery that is an object
-  // spread operator only creates shallow copies, might not copy all visitData
-  // put all properties in same object, ie lift "up" visitData into the object and be on the same level as id
-  // figure out best practice for updating state that is an array of objects in react
-  // probably here, use spread operator:
-  // https://stackoverflow.com/questions/37662708/react-updating-state-when-state-is-an-array-of-objects
-  const handleChangeTest = (e) => {
-    // console.log(e.target);
-    // console.log(e.target.id);
-    // console.log(e.target.name);
+  // visitType object should each have a property, altVisitType, which is an array
+  // altVisitType: [],
+  // After uploading the schedule, if the displayed visit type is different from
+  // the actual visit type, then the user can correct it by changing the visit Type on the form
+  // this updates the altVisitType array
+  // the library file, convertImgToSchedule, should check a separate variable, listOfAltVisitTypes,
+  // to see if the alternate interpretation of the visitType is in the array
+  // if an altVisitType is found while converting the image to text, then the displayed
+  // visitType is the actual visit type, not the alt.
 
-    const { name, id } = e.target;
+  // if the visitType displayed is different from the visitType on the image, then
+  // the visitType object s
 
-    const visitTypeId = id.substring(id.indexOf('-') + 1);
+  // Two options for adding visit.
+  // 1. Be able to add single visit manually
+  // 2. Scan picture to add visit
+
+  // Error if "Upload is clicked" without visit file added.
+  // Probably grey out Upload button until visit file is added
+  // What happens if try to upload file that has no visit info?
+
+  // Two options for adding visit.
+  // 1. Be able to add single visit manually
+  // 2. Scan picture to add visit
+
+  // Error if "Upload is clicked" without visit file added.
+  // Probably grey out Upload button until visit file is added
+  // What happens if try to upload file that has no visit info?
+
+  const handleChange = (e, visitId) => {
+    const { name, value } = e.target;
+    console.log(
+      `hangleChangeTest visitId: ${visitId}, name: ${name}, value: ${value}`
+    );
+    const newVisitList = visitList.map((key) =>
+      key.visitId === visitId ? { ...key, [name]: value } : key
+    );
+    setVisitList(newVisitList);
   };
 
   const handleClick = async () => {
@@ -93,7 +117,7 @@ export default function visitAddForm() {
     });
     const { lines } = result.data;
     const allVisitData = convertImgToSchedule(lines);
-    setList(allVisitData);
+    setVisitList(allVisitData);
   };
 
   const displayDefaultPage = () => (
@@ -135,12 +159,11 @@ export default function visitAddForm() {
   );
 
   const displayVisitTypes = () =>
-    list.map((key) => (
+    visitList.map((key) => (
       <VisitType
-        key={key.id}
-        id={key.id}
-        visitData={key.visitData}
-        handleChangeTest={handleChangeTest}
+        key={key.visitId}
+        visitData={key}
+        handleChange={handleChange}
       />
     ));
 
@@ -148,9 +171,7 @@ export default function visitAddForm() {
     <section>
       {conversionProgress === 0 && displayDefaultPage()}
       {convertingImage() && displayCircleProgress()}
-      {list.length > 0 && displayVisitTypes()}
-
-      {/* <VisitType handleChangeTest={handleChangeTest} thing={thing} /> */}
+      {visitList.length > 0 && displayVisitTypes()}
     </section>
   );
 }
