@@ -6,6 +6,7 @@ import Tesseract from 'tesseract.js';
 // import useForm from '../lib/useForm';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 
+import styled, { keyframes } from 'styled-components';
 import DisplayError from '../ErrorMessage';
 import { ALL_PRODUCTS_QUERY } from '../Products';
 import Form from '../styles/Form';
@@ -36,6 +37,15 @@ const CREATE_PRODUCT_MUTATION = gql`
       name
     }
   }
+`;
+
+const VisitTypeLabels = styled.div`
+  display: flex;
+  justify-content: space-around;
+  position: sticky;
+  background-color: white;
+  height: 75px;
+  top: 0rem;
 `;
 
 export default function visitAddForm() {
@@ -91,15 +101,8 @@ export default function visitAddForm() {
   // 1. Be able to add single visit manually
   // 2. Scan picture to add visit
 
-  // Error if "Upload is clicked" without visit file added.
-  // Probably grey out Upload button until visit file is added
-  // What happens if try to upload file that has no visit info?
-
   const handleChange = (e, visitId) => {
     const { name, value } = e.target;
-    console.log(
-      `hangleChangeTest visitId: ${visitId}, name: ${name}, value: ${value}`
-    );
     const newVisitList = visitList.map((key) =>
       key.visitId === visitId ? { ...key, [name]: value } : key
     );
@@ -144,7 +147,11 @@ export default function visitAddForm() {
             onChange={handleChangeImg}
           />
         </label>
-        <button type="button" onClick={handleClick}>
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={image.length === 0}
+        >
           Upload
         </button>
       </fieldset>
@@ -158,6 +165,24 @@ export default function visitAddForm() {
     <CircleProgress conversionProgress={conversionProgress} />
   );
 
+  const displayVisitTypeLabels = () => (
+    <section>
+      <VisitTypeLabels>
+        <p>MRN</p>
+        <p>Visit Type</p>
+        <p>CPT</p>
+        <p>RVU</p>
+      </VisitTypeLabels>
+      {displayVisitTypes()}
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+    </section>
+  );
+
   const displayVisitTypes = () =>
     visitList.map((key) => (
       <VisitType
@@ -168,10 +193,10 @@ export default function visitAddForm() {
     ));
 
   return (
-    <section>
+    <>
       {conversionProgress === 0 && displayDefaultPage()}
       {convertingImage() && displayCircleProgress()}
-      {visitList.length > 0 && displayVisitTypes()}
-    </section>
+      {visitList.length > 0 && displayVisitTypeLabels()}
+    </>
   );
 }

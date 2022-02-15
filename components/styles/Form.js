@@ -46,6 +46,11 @@ const Form = styled.form`
     font-weight: 600;
     padding: 0.5rem 1.2rem;
   }
+  button[disabled] {
+    background: #d3d3d3;
+    color: #000; /* Fallback for older browsers */
+    color: rgba(0, 0, 0, 0.25);
+  }
   fieldset {
     border: 0;
     padding: 0;

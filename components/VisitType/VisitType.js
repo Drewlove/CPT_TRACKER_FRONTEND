@@ -2,6 +2,7 @@ import styled, { keyframes } from 'styled-components';
 
 const VisitType = styled.div`
   display: flex;
+  justify-content: space-around;
 `;
 
 export default function visitType(props) {
@@ -16,7 +17,6 @@ export default function visitType(props) {
   return (
     <VisitType>
       <label htmlFor={`mrn-${visitId}`}>
-        MRN
         <input
           type="number"
           id={`mrn-${visitId}`}
@@ -27,7 +27,6 @@ export default function visitType(props) {
         />
       </label>
       <label htmlFor={`visitType-${visitId}`}>
-        Visit Type
         <input
           type="text"
           id={`visitType-${visitId}`}
@@ -39,7 +38,6 @@ export default function visitType(props) {
       </label>
 
       <label htmlFor={`cpt-${visitId}`}>
-        CPT
         <input
           type="number"
           id={`cpt-${visitId}`}
@@ -50,7 +48,6 @@ export default function visitType(props) {
         />
       </label>
       <label htmlFor={`rvu-${visitId}`}>
-        RVU
         <input
           type="number"
           id={`rvu-${visitId}`}
