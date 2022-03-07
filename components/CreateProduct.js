@@ -102,8 +102,19 @@ export default function CreateProduct() {
             onChange={handleChange}
           />
         </label>
-
-        <button type="submit">+ Add Product</button>
+        <div>
+          <button type="submit">+ Add Product</button>
+        </div>
+        <div>
+          <button type="button" onClick={clearForm}>
+            Clear Form
+          </button>
+        </div>
+        <div>
+          <button type="button" onClick={resetForm}>
+            Reset Form
+          </button>
+        </div>
       </fieldset>
     </Form>
   );

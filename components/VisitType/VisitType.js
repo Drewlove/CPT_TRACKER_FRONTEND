@@ -6,7 +6,6 @@ const VisitType = styled.div`
 `;
 
 export default function visitType(props) {
-  console.log(props);
   const { mrn, data, visitType, cpt, rvu, visitId } = props.visitData;
 
   const handleChange = (e, visitId) => {
