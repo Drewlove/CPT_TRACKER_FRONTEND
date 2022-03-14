@@ -2,9 +2,21 @@ import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import Head from 'next/head';
 import Link from 'next/link';
+import styled from 'styled-components';
 import PaginationStyles from './styles/PaginationStyles';
 import DisplayError from './ErrorMessage';
 import { perPage } from '../config';
+
+const PaginationLabels = styled.p`
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+`;
+
+const PaginationArrows = styled.a`
+  font-size: 3rem;
+`;
 
 export const PAGINATION_QUERY = gql`
   query PAGINATION_QUERY {
@@ -23,20 +35,15 @@ export default function Pagination({ page }) {
   const pageCount = Math.ceil(count / perPage);
   return (
     <PaginationStyles>
-      <Head>
-        <title>
-          Patient Visits - Page {page} of {pageCount}
-        </title>
-      </Head>
       <Link href={`/records/${page - 1}`}>
-        <a aria-disabled={page <= 1}>← Prev</a>
+        <PaginationArrows aria-disabled={page <= 1}>←</PaginationArrows>
       </Link>
-      <p>
+      <PaginationLabels>
         Page {page} of {pageCount}
-      </p>
-      <p>{count} Items Total</p>
+      </PaginationLabels>
+      <PaginationLabels>{count} Items Total</PaginationLabels>
       <Link href={`/records/${page + 1}`}>
-        <a aria-disabled={page >= pageCount}>Next →</a>
+        <PaginationArrows aria-disabled={page >= pageCount}>→</PaginationArrows>
       </Link>
     </PaginationStyles>
   );

@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
 const PaginationStyles = styled.div`
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* text-align: center;
   display: inline-grid;
   grid-template-columns: repeat(4, auto);
   align-items: stretch;
@@ -17,7 +20,7 @@ const PaginationStyles = styled.div`
     &:last-child {
       border-right: 0;
     }
-  }
+  }*/
   a[aria-disabled='true'] {
     color: grey;
     pointer-events: none;

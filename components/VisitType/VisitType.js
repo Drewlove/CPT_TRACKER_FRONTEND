@@ -1,9 +1,13 @@
 import styled, { keyframes } from 'styled-components';
+import VisitType from '../styles/VisitTypeStyles';
 
-const VisitType = styled.div`
-  display: flex;
-  justify-content: space-around;
-`;
+// const VisitType = styled.div`
+//   display: flex;
+//   justify-content: space-around;
+//   input {
+//     font-size: 14px;
+//   }
+// `;
 
 export default function visitType(props) {
   const { mrn, data, visitType, cpt, rvu, visitId } = props.visitData;
