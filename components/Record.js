@@ -24,8 +24,16 @@ const VisitRecordItem = styled.div`
   justify-content: center;
 `;
 
+const getFormattedDate = (date) => {
+  const dateObj = new Date(date);
+  const month = dateObj.getMonth() + 1;
+  const day = dateObj.getDate();
+  const year = dateObj.getFullYear();
+  return `${month}/${day}/${year}`;
+};
+
 export default function Record(props) {
-  const { mrn, cpt, rvu, visitType, id } = props.visit;
+  const { mrn, visitType, cpt, rvu, visitDate, id } = props.visit;
   return (
     <Link href={`/record/${id}`}>
       <VisitRecord>
@@ -33,6 +41,7 @@ export default function Record(props) {
         <VisitRecordItem>{visitType}</VisitRecordItem>
         <VisitRecordItem>{cpt}</VisitRecordItem>
         <VisitRecordItem>{rvu}</VisitRecordItem>
+        <VisitRecordItem>{getFormattedDate(visitDate)}</VisitRecordItem>
       </VisitRecord>
     </Link>
   );

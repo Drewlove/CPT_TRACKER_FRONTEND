@@ -7,47 +7,21 @@ import Tesseract from 'tesseract.js';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 
 import styled, { keyframes } from 'styled-components';
+import DatePicker from 'react-datepicker';
 import DisplayError from '../ErrorMessage';
 import { ALL_PRODUCTS_QUERY } from '../Products';
 import Form from '../styles/Form';
-import VisitType from '../VisitType/VisitType';
+import VisitTypeInputs from '../VisitTypeInputs/VisitTypeInputs';
 import CircleProgress from '../CircleProgress/CircleProgress';
 import convertImgToSchedule from '../../lib/convertImgToSchedule';
 import VisitTypeLabels from '../styles/VisitTypeLabels';
-
-// HERE, NEXT
-// visitType object should each have a property, altVisitType, which is an array
-// altVisitType: [],
-// After uploading the schedule, if the displayed visit type is different from
-// the actual visit type, then the user can correct it by changing the visit Type on the form
-// this updates the altVisitType array
-// the library file, convertImgToSchedule, should check a separate variable, listOfAltVisitTypes,
-// to see if the alternate interpretation of the visitType is in the array
-// if an altVisitType is found while converting the image to text, then the displayed
-// visitType is the actual visit type, not the alt.
-
-// MUTATION:
-// should you use a mutation similar to CreateProducts? This allows each patient visit to be logged as
-// an independent piece of data.
-
-// if the visitType displayed is different from the visitType on the image, then
-// the visitType object s
-
-// Two options for adding visit.
-// 1. Be able to add single visit manually
-// 2. Scan picture to add visit
-
-// Error if "Upload is clicked" without visit file added.
-// Probably grey out Upload button until visit file is added
-// What happens if try to upload file that has no visit info?
-
-// Two options for adding visit.
-// 1. Be able to add single visit manually
-// 2. Scan picture to add visit
+import VisitTypeDate from '../VisitTypeDate/VisitTypeDate';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const CREATE_PATIENT_VISITS_MUTATION = gql`
   mutation CREATE_PATIENT_VISITS_MUTATION($input: [PatientVisitsCreateInput]) {
     createPatientVisits(data: $input) {
+      visitDate
       id
       mrn
       cpt
@@ -59,15 +33,28 @@ const CREATE_PATIENT_VISITS_MUTATION = gql`
 
 export default function visitAddForm() {
   const [image, setImage] = useState('');
+  const [conversionProgress, setConversionProgress] = useState(0);
+  const [visitDate, setVisitDate] = useState(new Date());
   const [patientVisitsList, setPatientVisitsList] = useState([
     {
       id: '',
       mrn: '',
       visitType: '',
+      visitDate: new Date(),
       cpt: 0,
       rvu: 0,
     },
   ]);
+
+  const testData = [
+    { data: { visitDate: '', mrn: '1', cpt: 1, rvu: 1, visitType: '1' } },
+    { data: { visitDate: '', mrn: '2', cpt: 2, rvu: 2, visitType: '2' } },
+  ];
+
+  const filterPatientVisitsData = () =>
+    patientVisitsList.map(
+      selectProps('mrn', 'visitDate', 'visitType', 'cpt', 'rvu')
+    );
 
   const selectProps = (...props) =>
     function (obj) {
@@ -78,18 +65,6 @@ export default function visitAddForm() {
       return newObj;
     };
 
-  const testData = [
-    { data: { mrn: '1', cpt: 1, rvu: 1, visitType: '1' } },
-    { data: { mrn: '2', cpt: 2, rvu: 2, visitType: '2' } },
-  ];
-  const filterPatientVisitsData = () => {
-    const thing = patientVisitsList.map(
-      selectProps('mrn', 'visitType', 'cpt', 'rvu')
-    );
-    console.log(thing);
-    return thing;
-  };
-
   const [createPatientVisits, { loading, error, data }] = useMutation(
     CREATE_PATIENT_VISITS_MUTATION,
     {
@@ -97,14 +72,6 @@ export default function visitAddForm() {
       variables: { input: filterPatientVisitsData() },
     }
   );
-
-  const testClick = async () => {
-    // const testData = filterPatientVisitsData(patientVisitsList);
-    // console.log(testData);
-    createPatientVisits();
-  };
-
-  const [conversionProgress, setConversionProgress] = useState(0);
 
   // destructuring to get only the desired variables from the object
   // leaves out the id that is created for referencing each visit type
@@ -129,7 +96,6 @@ export default function visitAddForm() {
     const result = await Tesseract.recognize(image, 'eng', {
       logger: (m) => {
         if (m.status === 'recognizing text') {
-          console.log('status', m.status);
           setConversionProgress(m.progress);
         }
       },
@@ -171,7 +137,7 @@ export default function visitAddForm() {
     <CircleProgress conversionProgress={conversionProgress} />
   );
 
-  const displayVisitTypeLabels = () => (
+  const displayVisitForm = () => (
     <Form
       onSubmit={async (e) => {
         e.preventDefault();
@@ -181,34 +147,47 @@ export default function visitAddForm() {
         });
       }}
     >
+      <DatePicker
+        selected={visitDate}
+        onChange={(date) => handleDateChange(date)}
+      />
       <VisitTypeLabels>
         <p>MRN</p>
         <p>Visit Type</p>
         <p>CPT</p>
         <p>RVU</p>
       </VisitTypeLabels>
-      {displayVisitTypes()}
+      {displayVisitTypeInputs()}
       <button type="submit">Submit</button>
     </Form>
   );
 
-  const displayVisitTypes = () =>
+  const displayVisitTypeInputs = () =>
     patientVisitsList.map((key) => (
-      <VisitType
+      <VisitTypeInputs
         key={key.visitId}
         visitData={key}
         handleChange={handleChange}
       />
     ));
 
+  const handleDateChange = (date) => {
+    const updatedVisitList = patientVisitsList.map((key) => ({
+      ...key,
+      visitDate: new Date(new Date(date).setHours(0, 0, 0, 0)),
+    }));
+    setVisitDate(date);
+    setPatientVisitsList(updatedVisitList);
+  };
+
   return (
     <>
       {conversionProgress === 0 && displayDefaultPage()}
       {convertingImage() && displayCircleProgress()}
-      {conversionProgress === 1 && displayVisitTypeLabels()}
-      <button type="button" onClick={() => testClick()}>
+      {conversionProgress === 1 && displayVisitForm()}
+      {/* <button type="button" onClick={() => testClick()}>
         Test
-      </button>
+      </button> */}
     </>
   );
 }
