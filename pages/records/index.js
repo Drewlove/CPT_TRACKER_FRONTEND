@@ -2,7 +2,7 @@ import { useRouter } from 'next/dist/client/router';
 import Pagination from '../../components/Pagination';
 import Records from '../../components/Records';
 
-export default function OrderPage() {
+export default function RecordsPage() {
   const { query } = useRouter();
   const page = parseInt(query.page);
   return (
@@ -13,3 +13,5 @@ export default function OrderPage() {
     </div>
   );
 }
+
+// Not sure if you heard me, I will be right back. One moment...
