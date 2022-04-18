@@ -2,6 +2,7 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/records": "pages/records.js",
-  "/addVisit": "pages/addVisit.js"
+  "/search": "pages/search.js",
+  "/records/[page]": "pages/records/[page].js",
+  "/records": "pages/records.js"
 }

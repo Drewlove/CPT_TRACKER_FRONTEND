@@ -10,7 +10,7 @@ export default function Nav() {
       <Link href="/account">Account</Link>
       <Link href="/addVisit">Add Visit</Link>
       <Link href="/records">Records</Link>
-      <Link href="/test">Test</Link>
+      <Link href="/search">Search</Link>
     </NavStyles>
   );
 }

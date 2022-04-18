@@ -24,15 +24,20 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/addVisit": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/addVisit.js"
-    ],
     "/records": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/records.js"
+    ],
+    "/records/[page]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/records/[page].js"
+    ],
+    "/search": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/search.js"
     ]
   },
   "ampFirstPages": []
