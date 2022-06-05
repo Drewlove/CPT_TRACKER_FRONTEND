@@ -1,6 +1,18 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import Router from 'next/router';
+import styled from 'styled-components';
+import React, { useState } from 'react';
+import DeleteConfirmModal from './DeleteConfirmModal';
+
+const DeleteButton = styled.button`
+  margin: 5px;
+  width: 75px;
+  align-self: flex-end;
+  :hover {
+    cursor: pointer;
+  }
+`;
 
 const DELETE_PATIENT_VISIT_MUTATION = gql`
   mutation DELETE_PATIENT_VISIT_MUTATION($id: ID!) {
@@ -15,7 +27,7 @@ function update(cache, payload) {
 }
 
 export default function DeleteVisit({ id }) {
-  console.log(id);
+  const [displayModal, setDisplayModal] = useState(false);
   const [deletePatientVisit, { loading, error }] = useMutation(
     DELETE_PATIENT_VISIT_MUTATION,
     {
@@ -24,6 +36,10 @@ export default function DeleteVisit({ id }) {
     }
   );
 
+  const toggleModal = () => {
+    setDisplayModal(!displayModal);
+  };
+
   const handleDelete = async () => {
     await deletePatientVisit().catch((err) => alert(err.message));
     Router.push({
@@ -31,16 +47,20 @@ export default function DeleteVisit({ id }) {
     });
   };
   return (
-    <button
-      type="button"
-      disabled={loading}
-      onClick={() => {
-        if (confirm('Are you sure you want to delete this item?')) {
-          handleDelete();
-        }
-      }}
-    >
-      Delete
-    </button>
+    <>
+      <DeleteButton
+        type="button"
+        disabled={loading}
+        onClick={() => toggleModal()}
+      >
+        Delete
+      </DeleteButton>
+      {displayModal && (
+        <DeleteConfirmModal
+          toggleModal={() => toggleModal()}
+          handleDelete={() => handleDelete()}
+        />
+      )}
+    </>
   );
 }

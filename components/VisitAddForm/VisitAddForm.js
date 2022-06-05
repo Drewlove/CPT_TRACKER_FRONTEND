@@ -164,16 +164,17 @@ export default function visitAddForm({ client }) {
     <CircleProgress conversionProgress={conversionProgress} />
   );
 
+  const handleSubmit = async (e) => {
+    // const { data, error, loading } = useQuery(ALL_PATIENT_VISITS_QUERY);
+    e.preventDefault();
+    const res = await createPatientVisits();
+    Router.push({
+      pathname: '/records',
+    });
+  };
+
   const displayVisitForm = () => (
-    <Form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const res = await createPatientVisits();
-        Router.push({
-          pathname: '/records',
-        });
-      }}
-    >
+    <Form onSubmit={(e) => handleSubmit(e)}>
       <DatePicker
         selected={visitDate}
         onChange={(date) => handleDateChange(date)}

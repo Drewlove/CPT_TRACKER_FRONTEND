@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
 import { perPage } from '../config';
 import Record from './Record';
 
@@ -33,7 +34,6 @@ export default function RecordList(props) {
 
   const renderVisitRecords = () => {
     const { data } = props;
-    console.log(data);
     return data.map((key) => <Record visit={key} id={key.id} />);
   };
   return (

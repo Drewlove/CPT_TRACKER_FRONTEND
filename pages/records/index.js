@@ -7,11 +7,9 @@ export default function RecordsPage() {
   const page = parseInt(query.page);
   return (
     <div>
-      <Pagination page={page || 1} />
+      {/* <Pagination page={page || 1} /> */}
       <Records page={page || 1} />
-      <Pagination page={page || 1} />
+      {/* <Pagination page={page || 1} /> */}
     </div>
   );
 }
-
-// Not sure if you heard me, I will be right back. One moment...

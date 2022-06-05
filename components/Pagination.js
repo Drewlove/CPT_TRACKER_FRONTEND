@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import Head from 'next/head';
 import Link from 'next/link';
 import styled from 'styled-components';
+import { useRouter } from 'next/dist/client/router';
 import PaginationStyles from './styles/PaginationStyles';
 import DisplayError from './ErrorMessage';
 import { perPage } from '../config';
@@ -26,12 +27,16 @@ export const PAGINATION_QUERY = gql`
   }
 `;
 
-export default function Pagination({ page }) {
+export default function Pagination(props) {
+  const { page, filteredData } = props;
   const { error, loading, data } = useQuery(PAGINATION_QUERY);
   if (loading) return 'Loading...';
-  //   if (error) return <DisplayError error={error} />;
+  if (error) return <DisplayError error={error} />;
   if (error) return <h1>Error</h1>;
-  const { count } = data._allPatientVisitsMeta;
+
+  let { count } = data._allPatientVisitsMeta;
+  if (filteredData?.allPatientVisits)
+    count = filteredData.allPatientVisits.length;
   const pageCount = Math.ceil(count / perPage);
   return (
     <PaginationStyles>
