@@ -3,7 +3,6 @@ import { useMutation, ApolloProvider } from '@apollo/client';
 import gql from 'graphql-tag';
 import Router from 'next/router';
 import Tesseract from 'tesseract.js';
-// import useForm from '../lib/useForm';
 
 import styled, { keyframes } from 'styled-components';
 import DatePicker from 'react-datepicker';
@@ -24,7 +23,6 @@ const CREATE_PATIENT_VISITS_MUTATION = gql`
     createPatientVisits(data: $input) {
       id
       visitDate
-      mrn
       cpt
       rvu
       visitType
@@ -32,9 +30,18 @@ const CREATE_PATIENT_VISITS_MUTATION = gql`
   }
 `;
 
-// TODO: gray out submit button, make inactive, after clicking it. This prevents double clicking
+// TODO:
+// Change DatePicker style, make font bigger, center it, make date display bigger after user clicks on date picker
+// https://github.com/Hacker0x01/react-datepicker/issues/2862
+// gray out submit button, make inactive, after clicking it. This prevents double clicking
 // and the error that double clicking creates
 // keep client? only need if using client, not the proxy object for updating cache
+
+// Add:
+// Auth
+// new user screen, sign up, log in
+// all data, queries and mutations, should be specific to that user, so include user ID in queries and mutations
+
 export default function visitAddForm({ client }) {
   const [image, setImage] = useState('');
   const [conversionProgress, setConversionProgress] = useState(0);
@@ -42,7 +49,6 @@ export default function visitAddForm({ client }) {
   const [patientVisitsList, setPatientVisitsList] = useState([
     {
       id: '',
-      mrn: 0,
       visitType: '',
       visitDate: new Date(),
       cpt: 0,
@@ -51,9 +57,7 @@ export default function visitAddForm({ client }) {
   ]);
 
   const filterPatientVisitsData = () =>
-    patientVisitsList.map(
-      selectProps('mrn', 'visitDate', 'visitType', 'cpt', 'rvu')
-    );
+    patientVisitsList.map(selectProps('visitDate', 'visitType', 'cpt', 'rvu'));
 
   const selectProps = (...props) =>
     function (obj) {
@@ -69,8 +73,8 @@ export default function visitAddForm({ client }) {
   };
 
   const testData = [
-    { data: { visitDate: '', mrn: 1, cpt: 1, rvu: 1, visitType: '1' } },
-    { data: { visitDate: '', mrn: 2, cpt: 2, rvu: 2, visitType: '2' } },
+    { data: { visitDate: '', cpt: 1, rvu: 1, visitType: '1' } },
+    { data: { visitDate: '', cpt: 2, rvu: 2, visitType: '2' } },
   ];
 
   const variables = {
@@ -129,6 +133,7 @@ export default function visitAddForm({ client }) {
     });
     const { lines } = result.data;
     const patientVisitsListData = convertImgToSchedule(lines);
+    patientVisitsListData.forEach((obj) => console.log(obj));
     setPatientVisitsList(patientVisitsListData);
   };
 
@@ -180,7 +185,6 @@ export default function visitAddForm({ client }) {
         onChange={(date) => handleDateChange(date)}
       />
       <VisitTypeLabels>
-        <p>MRN</p>
         <p>Visit Type</p>
         <p>CPT</p>
         <p>RVU</p>

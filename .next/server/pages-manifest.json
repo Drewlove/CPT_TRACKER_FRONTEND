@@ -2,9 +2,6 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/record/[id]": "pages/record/[id].js",
-  "/next/dist/pages/_error": "pages/next/dist/pages/_error.js",
   "/records": "pages/records.js",
-  "/addVisit": "pages/addVisit.js",
-  "/": "pages/index.js"
+  "/addVisit": "pages/addVisit.js"
 }

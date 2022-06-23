@@ -17,12 +17,13 @@ const Modal = styled.div`
 /* Modal Content/Box */
 const ModalContent = styled.div`
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  max-width: 425px;
+  width: 75%;
+  margin: 5% auto;
+  height: 300px;
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
 `;
 
 const ConfirmDeleteText = styled.p`
@@ -35,10 +36,10 @@ const DeleteExplanation = styled.p`
 `;
 
 const CloseButton = styled.button`
-  align-self: flex-end;
   background-color: white;
   border: none;
-  font-size: 21px;
+  font-size: 28px;
+  align-self: end;
   :hover {
     color: grey;
     cursor: pointer;
@@ -50,38 +51,33 @@ const DeleteButton = styled.button`
   background-color: red;
   border: none;
   color: white;
-  padding: 10px;
   border-radius: 5px;
+  width: 125px;
+  padding: 10px;
+  margin: 5px;
+  align-self: end;
   :hover {
     cursor: pointer;
     box-shadow: 2px 2px 2px grey;
   }
 `;
 
-const DeleteButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
-
 export default function DeleteConfirmModal(props) {
   const { toggleModal, handleDelete } = props;
   return (
-    <Modal>
-      <ModalContent>
+    <Modal onClick={() => toggleModal()}>
+      {/* e.stopPropagation() = user can click inside modal w\o closing it */}
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton type="button" onClick={() => toggleModal()}>
           X
         </CloseButton>
-        <div>
-          <ConfirmDeleteText>Delete Record?</ConfirmDeleteText>
-          <DeleteExplanation>
-            This will permanently delete this record.
-          </DeleteExplanation>
-          <DeleteButtonWrapper>
-            <DeleteButton type="button" onClick={() => handleDelete()}>
-              Delete
-            </DeleteButton>
-          </DeleteButtonWrapper>
-        </div>
+        <ConfirmDeleteText>Delete Record?</ConfirmDeleteText>
+        <DeleteExplanation>
+          This will permanently delete this record.
+        </DeleteExplanation>
+        <DeleteButton type="button" onClick={() => handleDelete()}>
+          Delete
+        </DeleteButton>
       </ModalContent>
     </Modal>
   );

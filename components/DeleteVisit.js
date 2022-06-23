@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import Router from 'next/router';
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DeleteConfirmModal from './DeleteConfirmModal';
 
 const DeleteButton = styled.button`
@@ -40,12 +40,18 @@ export default function DeleteVisit({ id }) {
     setDisplayModal(!displayModal);
   };
 
+  // Work on displaying a message if the record is successfully deleted, then rerouting user to records page
   const handleDelete = async () => {
     await deletePatientVisit().catch((err) => alert(err.message));
-    Router.push({
-      pathname: '/records/',
-    });
+    setTimeout(function () {
+      displayMsg();
+      Router.push({
+        pathname: '/records/',
+      });
+    }, 10000);
   };
+
+  const displayMsg = () => <div>HI!</div>;
   return (
     <>
       <DeleteButton

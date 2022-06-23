@@ -152,12 +152,8 @@ export default function SingleRecord({ id }) {
     });
   };
 
-  const testClick = () => {
-    console.log('test');
-  };
-
   const renderForm = () => (
-    <Main onClick={() => testClick()}>
+    <Main>
       <DeleteVisit id={id} />
       <FormWrapper>
         <form>
